@@ -103,7 +103,7 @@ const exportUsersReport = async (req, res) => {
         ];
 
         Object.values(userTaskMap).forEach((user) => {
-            worksheey.addRow(user);
+            worksheet.addRow(user);
         });
 
         res.headers(
