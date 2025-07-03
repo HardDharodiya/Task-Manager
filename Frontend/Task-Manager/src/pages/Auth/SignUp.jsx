@@ -86,7 +86,7 @@ const SignUp = () => {
           </div>
           {error && <p className="text-red-500 text-xs pb-2.5">{error}</p>}
 
-          <button type="submit" className="btn-primary" onClick={handleSignup()}>
+          <button type="submit" className="btn-primary" >
             SIGNUP
           </button>
 

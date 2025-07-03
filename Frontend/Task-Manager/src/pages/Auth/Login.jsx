@@ -1,8 +1,11 @@
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import AuthLayout from '../../components/layouts/AuthLayout';
 import { Link, useNavigate } from 'react-router-dom';
 import Input from '../../components/inputs/Input';
 import { validateEmail } from '../../utils/helper';
+import axiosInstance from '../../utils/axiosInstance';
+import { API_PATHS } from '../../utils/apiPath';
+// import { UserContext } from '../../context/UserContext';
 
 const Login = () => {
 
@@ -10,6 +13,7 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
 
+  // const { updateUser } = useContext(UserContext); // Import UserContext to update user state
   const navigate = useNavigate();
 
   //Handle Login Form Submit
@@ -27,8 +31,35 @@ const Login = () => {
     }
 
     setError("");
-
     //Login API Call
+    try{
+      const response = await axiosInstance.post(API_PATHS.AUTH.LOGIN, {
+        email,
+        password,
+      });
+      console.log(response.data);
+      const { token, user } = response.data;
+      const role = response.data.role;
+      // console.log(role);
+
+      if(token){
+        localStorage.setItem("token", token);
+        updateUser(response.data); // Update user context with the logged-in user data
+
+        // Redirect based on role
+        if(role === "admin"){
+          navigate("/admin/dashboard");
+        } else {
+          navigate("/user/dashboard");
+        }
+      }
+    }catch(error){
+      if(error.response && error.response.data.message){
+        setError(error.response.data.message);
+      } else {
+        setError("Somthing went wrong. Please try again.")
+      }
+    }
   };
 
   return (
@@ -48,19 +79,19 @@ const Login = () => {
             value={email}
             onChange={({ target }) => setEmail(target.value)}
             label="Email Address"
-            placeholder="xyz@gmail.com"
+            placeholder="hard.dummy@gmail.com"
             type="text" />
 
           <Input
             value={password}
             onChange={({ target }) => setPassword(target.value)}
             label="Password"
-            placeholder="Enter Password"
+            placeholder="Enter Password (test@1234)"
             type="password" />
 
             {error && <p className="text-red-500 text-xs pb-2.5">{error}</p>}
 
-            <button type="submit" className="btn-primary" onClick={handleLogin()}>
+            <button type="submit" className="btn-primary">
               LOGIN
             </button>
 
