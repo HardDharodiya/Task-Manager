@@ -5,7 +5,7 @@ import Input from '../../components/inputs/Input';
 import { validateEmail } from '../../utils/helper';
 import axiosInstance from '../../utils/axiosInstance';
 import { API_PATHS } from '../../utils/apiPath';
-// import { UserContext } from '../../context/UserContext';
+import { UserContext } from '../../context/userContext';
 
 const Login = () => {
 
@@ -13,48 +13,49 @@ const Login = () => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState(null);
 
-  // const { updateUser } = useContext(UserContext); // Import UserContext to update user state
+  const { updateUser } = useContext(UserContext); // Import UserContext to update user state
   const navigate = useNavigate();
 
   //Handle Login Form Submit
   const handleLogin = async (e) => {
     e.preventDefault();
 
-    if (!validateEmail(email)){
+    if (!validateEmail(email)) {
       setError("Please enter a valid email address.");
       return;
     }
 
-    if(!password){
+    if (!password) {
       setError("Please enter the password");
       return;
     }
 
     setError("");
+
+    
     //Login API Call
-    try{
+    try {
       const response = await axiosInstance.post(API_PATHS.AUTH.LOGIN, {
         email,
         password,
       });
       console.log(response.data);
-      const { token, user } = response.data;
-      const role = response.data.role;
+      const { token, role } = response.data;
       // console.log(role);
 
-      if(token){
+      if (token) {
         localStorage.setItem("token", token);
-        updateUser(response.data); // Update user context with the logged-in user data
+        updateUser(response.data);
 
         // Redirect based on role
-        if(role === "admin"){
+        if (role === "admin") {
           navigate("/admin/dashboard");
         } else {
           navigate("/user/dashboard");
         }
       }
-    }catch(error){
-      if(error.response && error.response.data.message){
+    } catch (error) {
+      if (error.response && error.response.data.message) {
         setError(error.response.data.message);
       } else {
         setError("Somthing went wrong. Please try again.")
@@ -89,18 +90,18 @@ const Login = () => {
             placeholder="Enter Password (test@1234)"
             type="password" />
 
-            {error && <p className="text-red-500 text-xs pb-2.5">{error}</p>}
+          {error && <p className="text-red-500 text-xs pb-2.5">{error}</p>}
 
-            <button type="submit" className="btn-primary">
-              LOGIN
-            </button>
+          <button type="submit" className="btn-primary">
+            LOGIN
+          </button>
 
-            <p className="text-[13px] text-slate-800 mt-3">
-              Don't have an account ?{" "}
-              <Link className="font-medium text-primary underline" to="/signup">
-                SignUp
-              </Link>
-            </p>
+          <p className="text-[13px] text-slate-800 mt-3">
+            Don't have an account ?{" "}
+            <Link className="font-medium text-primary underline" to="/signup">
+              SignUp
+            </Link>
+          </p>
         </form>
       </div>
     </AuthLayout>
