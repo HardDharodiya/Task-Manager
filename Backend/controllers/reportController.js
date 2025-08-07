@@ -1,6 +1,6 @@
 const Task = require('../models/Task');
 const User = require('../models/User');
-const exceJS = require('exceljs');
+const excelJS = require('exceljs');
 
 //@desc  Export all tasks as Excel file
 //@route GET /api/reports/export/tasks
@@ -9,7 +9,7 @@ const exportTasksReport = async (req, res) => {
     try {
         const tasks = await Task.find().populate("assignedTo", "name email");
 
-        const workbook = new exceJS.Workbook();
+        const workbook = new excelJS.Workbook();
         const worksheet = workbook.addWorksheet('Tasks Report');
 
         worksheet.columns = [
@@ -19,7 +19,7 @@ const exportTasksReport = async (req, res) => {
             { header: 'Priority', key: 'priority', width: 15 },
             { header: 'Status', key: 'status', width: 20 },
             { header: 'dueDate', key: 'dueDate', width: 20 },
-            { header: 'Assigned To', key: 'assignedTo.name', width: 30 },
+            { header: 'Assigned To', key: 'assignedTo', width: 30 },
         ];
 
         tasks.forEach((task) => {
@@ -59,7 +59,7 @@ const exportTasksReport = async (req, res) => {
 const exportUsersReport = async (req, res) => {
     try {
         const users = await User.find().select("name email _id").lean();
-        const userTasks = await Task.find().populate("assignedTo", "name email");
+        const userTasks = await Task.find().populate("assignedTo", "name email _id");
 
         const userTaskMap = {};
         users.forEach((user) => {
@@ -76,21 +76,21 @@ const exportUsersReport = async (req, res) => {
         userTasks.forEach((task) => {
             if (task.assignedTo) {
                 task.assignedTo.forEach((assignedUser) => {
-                    if (userTaskMap(assignedUser._id)) {
+                    if (userTaskMap[assignedUser._id]) {
                         userTaskMap[assignedUser._id].taskCount += 1;
                         if (task.status === "Pending") {
-                            userTaskMap[assignedUser._id].pendingTasks += 1;
+                            userTaskMap[assignedUser._id].pendingTask += 1;
                         } else if (task.status === "In Progress") {
-                            userTaskMap[assignedUser._id].inProgressTasks += 1;
+                            userTaskMap[assignedUser._id].inProgressTask += 1;
                         } else if (task.status === "Completed") {
-                            userTaskMap[assignedUser._id].completedTasks += 1;
+                            userTaskMap[assignedUser._id].completedTask += 1;
                         }
                     }
                 });
             }
         });
 
-        const workbook = new exceJS.Workbook();
+        const workbook = new excelJS.Workbook();
         const worksheet = workbook.addWorksheet('Users Task Report');
 
         worksheet.columns = [
@@ -106,7 +106,7 @@ const exportUsersReport = async (req, res) => {
             worksheet.addRow(user);
         });
 
-        res.headers(
+        res.setHeader(
             "Content-Type",
             "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
         );

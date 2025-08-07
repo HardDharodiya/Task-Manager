@@ -10,10 +10,10 @@ export const API_PATHS = {
 
     USERS: {
         GET_ALL_USERS: "/api/users", // GET ALL USERS (aDMIN ONLY)
-        GET_USER_BY_ID: (userId) => `/api/user/${userId}`, // Get user details by ID
+        GET_USER_BY_ID: (userId) => `/api/users/${userId}`, // Get user details by ID
         CREATE_USER: "/api/users", // Create a new user (Admin only)
-        UPDATE_USER: (userId) => `/api/user/${userId}`, // Update user details by ID
-        DELETE_USER: (userId) => `/api/user/${userId}`, // Delete user
+        UPDATE_USER: (userId) => `/api/users/${userId}`, // Update user details by ID
+        DELETE_USER: (userId) => `/api/users/${userId}`, // Delete user
     },
 
     TASKS: {
