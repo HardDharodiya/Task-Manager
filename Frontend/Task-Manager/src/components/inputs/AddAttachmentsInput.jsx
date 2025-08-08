@@ -9,20 +9,23 @@ const AddAttachmentsInput = ({ attachments, setAttachments }) => {
     // Function to handle adding an option
     const handleAddOption = () => {
         if (option.trim()) {
-            setAttachments([...attachments, option.trim()]);
+            const newAttachments = [...attachments, option.trim()];
+            console.log('Setting attachments:', newAttachments);
+            setAttachments(newAttachments);
             setOption("");
         }
     };
 
     //Function to handle delete an option
     const handleDeleteOption = (index) => {
-        const updateArr = attachments.filter((_, idx) => idx !== index);
-        setAttachments(updateArr);
+    const updateArr = attachments.filter((_, idx) => idx !== index);
+    console.log('Setting attachments:', updateArr);
+    setAttachments(updateArr);
     };
 
     return (
         <div>
-            {attachments.map((item, index) => {
+            {attachments.map((item, index) => (
                 <div
                     className='flex justify-between bg-gray-50 border border-gray-100 px-3 py-2 rounded-md mb-3 mt-2'
                     key={item}
@@ -41,22 +44,22 @@ const AddAttachmentsInput = ({ attachments, setAttachments }) => {
                         <HiOutlineTrash className='text-lg text-red-500' />
                     </button>
                 </div>
-            })}
+            ))}
 
             <div className='flex items-center gap-5 mt-4'>
                 <div className='flex-1 flex items-center gap-3 border border-gray-100 rounded-md px-3'>
-                    <LuPaperclip className='text-gray-400'/>
+                    <LuPaperclip className='text-gray-400' />
 
-                    <input 
-                        type="text" 
+                    <input
+                        type="text"
                         placeholder='Add File Link'
                         value={option}
-                        onChange={({target}) => setOption(target.value)}
+                        onChange={({ target }) => setOption(target.value)}
                         className='w-full text-[13px] text-black outline-none bg-white py-2'
                     />
                 </div>
 
-                <button className='card-btn text-nowrap'>
+                <button className='card-btn text-nowrap' onClick={handleAddOption}>
                     <HiMiniPlus className='text-lg' /> Add
                 </button>
             </div>
