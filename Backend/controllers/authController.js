@@ -27,6 +27,7 @@ const registerUser = async (req, res) => {
         let role = "member";
         let isAdmin = false;
         if (adminInviteToken && adminInviteToken == process.env.ADMIN_INVITE_TOKEN) {
+            role = "admin";
             isAdmin = true;
         }
 
@@ -95,8 +96,8 @@ const loginUser = async (req, res) => {
 const getUserProfile = async (req, res) => {
     try {
         const user = await User.findById(req.user.id).select("-password");
-        if(!user){
-            return res.status(404).json({message: "User not found"});
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
         }
         res.json(user);
     } catch (error) {
@@ -111,14 +112,14 @@ const updateUserProfile = async (req, res) => {
     try {
         const user = await User.findById(req.user.id);
 
-        if(!user){
-            return res.status(404).json({message:"User not found"});
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
         }
 
         user.name = req.body.name || user.name;
         user.email = req.body.email || user.email;
 
-        if(req.body.password){
+        if (req.body.password) {
             const salt = await bcrypt.genSalt(10);
             user.password = await bcrypt.hash(req.bosy.password, salt);
         }
