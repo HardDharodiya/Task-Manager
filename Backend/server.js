@@ -11,6 +11,7 @@ const reportRoutes = require('./routes/reportRoutes');
 
 
 const app = express();
+app.set("trust proxy", 1);
 
 //Middleware to handle CORS
 
