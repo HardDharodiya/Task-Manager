@@ -30,7 +30,7 @@ const ManageUsers = () => {
 
   const handleDownloadReport = async () => {
     try {
-      const response = await axiosInstance.get(API_PATHS.REPORTS.EXPORT_USERS, {
+      const response = await axiosInstance.get(`${API_PATHS.REPORTS.EXPORT_USERS}?t=${new Date().getTime()}`, {
         responseType: "blob",
       });
 

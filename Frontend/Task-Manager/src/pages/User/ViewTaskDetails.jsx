@@ -81,6 +81,9 @@ const ViewTaskDetails = () => {
     return () => { };
   }, [id]);
 
+  const actualCompletedAt = task?.completedAt || (task?.status === 'Completed' ? task?.updatedAt : null);
+  const actualStartedAt = task?.startedAt || task?.createdAt;
+
   return (
     <DashboardLayout activeMenu="My Task">
       <div className='mt-5'>
@@ -134,6 +137,29 @@ const ViewTaskDetails = () => {
                   />
                 </div>
               </div>
+
+              {task?.status === "Completed" && actualCompletedAt && (
+                <div className='grid grid-cols-12 gap-4 mt-4 bg-indigo-50/50 border border-indigo-100 p-4 rounded-md'>
+                  <div className='col-span-6 md:col-span-4'>
+                    <InfoBox
+                      label="Started At"
+                      value={moment(actualStartedAt).format("Do MMM YYYY, h:mm a")}
+                    />
+                  </div>
+                  <div className='col-span-6 md:col-span-4'>
+                    <InfoBox
+                      label="Completed At"
+                      value={moment(actualCompletedAt).format("Do MMM YYYY, h:mm a")}
+                    />
+                  </div>
+                  <div className='col-span-12 md:col-span-4'>
+                    <InfoBox
+                      label="Time Spent"
+                      value={<span className='text-indigo-600'>{moment(actualCompletedAt).from(actualStartedAt, true)}</span>}
+                    />
+                  </div>
+                </div>
+              )}
 
               <div className='mt-2'>
                 <label className="text-xs font-medium text-slate-500">

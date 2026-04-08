@@ -200,9 +200,17 @@ const updateTaskStatus = async (req, res) => {
 
         task.status = req.body.status || task.status;
 
+        if (task.status === "In Progress" && !task.startedAt) {
+            task.startedAt = new Date();
+        }
+
         if (task.status === "Completed") {
             task.todoChecklist.forEach((item) => { item.completed = true; });
             task.progress = 100;
+            task.completedAt = new Date();
+            if (!task.startedAt) task.startedAt = task.createdAt || new Date();
+        } else {
+            task.completedAt = undefined;
         }
 
         const updatedTask = await task.save();
@@ -241,10 +249,15 @@ const updateTaskChecklist = async (req, res) => {
         //Auto-mark task as completed if all item are checked
         if (task.progress === 100) {
             task.status = "Completed";
+            task.completedAt = new Date();
+            if (!task.startedAt) task.startedAt = task.createdAt || new Date();
         } else if (task.progress > 0) {
             task.status = "In Progress";
+            if (!task.startedAt) task.startedAt = new Date();
+            task.completedAt = undefined;
         } else {
             task.status = "Pending";
+            task.completedAt = undefined;
         }
 
         await task.save();

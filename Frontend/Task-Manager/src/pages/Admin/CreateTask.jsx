@@ -206,6 +206,8 @@ const CreateTask = () => {
     return () => { };
   }, [taskId])
 
+  const actualCompletedAt = currentTask?.completedAt || (currentTask?.status === 'Completed' ? currentTask?.updatedAt : null);
+  const actualStartedAt = currentTask?.startedAt || currentTask?.createdAt;
 
   return (
     <DashboardLayout activeMenu="Create Task">
@@ -226,6 +228,19 @@ const CreateTask = () => {
                 </button>
               )}
             </div>
+
+            {currentTask?.status === "Completed" && actualCompletedAt && (
+              <div className='mt-4 p-4 bg-indigo-50/50 border border-indigo-100 rounded-md flex justify-between items-center'>
+                 <div>
+                    <label className='text-xs font-medium text-slate-500'>Time Spent</label>
+                    <p className='text-sm text-indigo-600 font-medium'>{moment(actualCompletedAt).from(actualStartedAt, true)}</p>
+                 </div>
+                 <div className='text-right'>
+                    <label className='text-xs font-medium text-slate-500'>Completed By / At</label>
+                    <p className='text-sm text-slate-700 font-medium'>{moment(actualCompletedAt).format("Do MMM YYYY, h:mm a")}</p>
+                 </div>
+              </div>
+            )}
 
             <div className='mt-4'>
               <label className='text-xs font-medium text-slate-600'>

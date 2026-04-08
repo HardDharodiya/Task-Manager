@@ -6,6 +6,7 @@ import { API_PATHS } from '../../utils/apiPath';
 import { LuFileSpreadsheet } from 'react-icons/lu';
 import TaskStatusTabs from '../../components/TaskStatusTabs';
 import TaskCard from '../../components/Cards/TaskCard';
+import TaskDetailsModal from '../../components/TaskDetailsModal';
 
 const ManageTasks = () => {
 
@@ -13,6 +14,9 @@ const ManageTasks = () => {
 
   const [tabs, setTabs] = useState([]);
   const [filterStatus, setFilterStatus] = useState("All");
+
+  const [selectedTask, setSelectedTask] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   const navigate = useNavigate();
 
@@ -45,12 +49,18 @@ const ManageTasks = () => {
   };
 
   const handleClick = (taskData) => {
+    setSelectedTask(taskData);
+    setIsModalOpen(true);
+  }
+
+  const handleUpdateClick = (taskData) => {
+    setIsModalOpen(false);
     navigate(`/admin/create-task`, { state: { taskId: taskData._id } });
   }
 
   const handleDownloadRepoart = async () => {
     try{
-      const response = await axiosInstance.get(API_PATHS.REPORTS.EXPORT_TASKS,{
+      const response = await axiosInstance.get(`${API_PATHS.REPORTS.EXPORT_TASKS}?t=${new Date().getTime()}`,{
         responseType: "blob",
       });
 
@@ -124,6 +134,9 @@ const ManageTasks = () => {
               attachmentCount={item.attachmentCount?.length || 0}
               completedTodoCount={item.completedTodoCount || 0}
               todoChecklist={item.todoChecklist || []}
+              startedAt={item.startedAt}
+              completedAt={item.completedAt}
+              updatedAt={item.updatedAt}
               onClick={()=>{
                 handleClick(item);
               }}
@@ -131,6 +144,13 @@ const ManageTasks = () => {
           ))}
         </div>
       </div>
+
+      <TaskDetailsModal 
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        task={selectedTask}
+        onUpdateClick={handleUpdateClick}
+      />
     </DashboardLayout>
   )
 }

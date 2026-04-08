@@ -17,6 +17,8 @@ const taskSchema = new mongoose.Schema(
         attachments: [{ type: String }],
         todoChecklist: [todoSchema],
         progress: { type: Number, default: 0 }, // Percentage of task completion
+        startedAt: { type: Date },
+        completedAt: { type: Date },
     },
     { timestamps: true }
 );

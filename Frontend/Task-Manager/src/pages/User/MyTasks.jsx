@@ -83,6 +83,9 @@ const MyTasks = () => {
               attachmentCount={item.attachmentCount?.length || 0}
               completedTodoCount={item.completedTodoCount || 0}
               todoChecklist={item.todoChecklist || []}
+              startedAt={item.startedAt}
+              completedAt={item.completedAt}
+              updatedAt={item.updatedAt}
               onClick={() => {
                 handleClick(item._id);
               }}

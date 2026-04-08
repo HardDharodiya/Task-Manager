@@ -16,8 +16,14 @@ const TaskCard = ({
     attachmentCount,
     completedTodoCount,
     todoChecklist,
+    startedAt,
+    completedAt,
+    updatedAt,
     onClick,
 }) => {
+    
+    const actualCompletedAt = completedAt || (status === 'Completed' ? updatedAt : null);
+    const actualStartedAt = startedAt || createdAt;
 
     const getStatusTagColor = () => {
         switch (status) {
@@ -85,6 +91,12 @@ const TaskCard = ({
             </p>
 
             <Progress progress={progress} status={status} />
+
+            {status === "Completed" && actualCompletedAt && (
+                <p className='text-[12px] text-gray-600 font-medium mt-3 bg-gray-50 p-2 rounded'>
+                    Time on Task: <span className='text-indigo-600'>{moment(actualCompletedAt).from(actualStartedAt, true)}</span>
+                </p>
+            )}
 
         </div>
 
