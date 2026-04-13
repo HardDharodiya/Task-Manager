@@ -52,15 +52,15 @@ const TaskCard = ({
         onClick={onClick}
     >
 
-        <div className='flex items-end gap-3 px-4'>
+        <div className='flex flex-wrap items-end gap-3 px-4'>
             <div
-                className={`text-[11px] font-medium ${getStatusTagColor()} px-4 py-0.5 rounded`}
+                className={`text-[11px] font-medium ${getStatusTagColor()} px-4 py-0.5 rounded whitespace-nowrap`}
             >
                 {status}
             </div>
 
             <div
-                className={`text-[11px] font-medium ${getPriorityTagColor()} px-4 py-0.5 rounded`}
+                className={`text-[11px] font-medium ${getPriorityTagColor()} px-4 py-0.5 rounded whitespace-nowrap`}
             >
                 {priority} Priority
             </div>
@@ -101,7 +101,7 @@ const TaskCard = ({
         </div>
 
         <div className='px-4'>
-            <div className='flex items-center justify-between my-1'>
+            <div className='flex flex-wrap items-center justify-between my-1 gap-2'>
                 <div>
                     <label className="text-xs text-gray-500">Start Date</label>
                     <p className='text-[13px] font-medium text-gray-900'>
@@ -117,7 +117,7 @@ const TaskCard = ({
                 </div>
             </div>
 
-            <div className='flex items-center justify-between mt-3'>
+            <div className='flex flex-wrap items-center justify-between mt-3 gap-2'>
                 <AvatarGroup avatars={assignedTo || []} />
 
                 {attachmentCount > 0 && (

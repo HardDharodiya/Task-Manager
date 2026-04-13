@@ -101,7 +101,7 @@ const ManageTasks = () => {
           </div>
 
           {tabs?.[0]?.count > 0 && (
-            <div className='flex items-center gap-3'>
+            <div className='flex items-center gap-3 w-full lg:w-auto mt-2 lg:mt-0 overflow-hidden'>
               <TaskStatusTabs
                 tabs={tabs}
                 activeTab={filterStatus}
@@ -109,7 +109,7 @@ const ManageTasks = () => {
               />
 
               <button
-                className='hidden lg:flex download-btn'
+                className='hidden lg:flex download-btn shrink-0'
                 onClick={handleDownloadRepoart}
               >
                 <LuFileSpreadsheet className='text-lg' />
